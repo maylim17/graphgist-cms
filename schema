@@ -1,0 +1,68 @@
+This	To	That
+Movie (GIST)	HAS_GENRE (HAS_DOMAIN)	Genre (DOMAIN)
+Person (actor=DOMAIN)	ACTED_IN (HAS_GIST)	Movie (GIST)
+Person (USECASE) DIRECTED (USECASE)	Movie (GIST)
+Person	WROTE (AUTHORED)	Movie (GIST)
+
+Movie (GIST)	HAS_KEYWORD 	Keyword 
+
+
+(uc:Person:UseCase)<-[:HAS_USECASE]-(gist:Movie:Gist)
+
+
+
+Person	PRODUCED	Movie
+Person	WROTE	Movie
+Person	WRITER_OF	Movie
+Person	FOLLOWS	Person
+Person	REVIEWED	Movie
+Person	WORKS_FOR	Company
+
+
+//change movie - gist
+
+MATCH (n:Movie {title:""}) 
+SET n.title = "" 
+SET n.tagline = "url"
+SET n.summary = ""
+SET n.rated = 
+SET n.released = 99999
+RETURN n.title
+
+
+//change genre - domain
+MATCH (n:`Genre` {name:"Adventure"}) set n.name="Data Science" return n.name
+
+//change hardcoded domains
+
+
+//change writtenby - authoredby
+
+MATCH (a:Person)-[:`WRITER_OF`]->(b:Movie) RETURN DISTINCT a.name LIMIT 15
+
+MATCH (n:Person {name:""})
+SET n.name = ""
+RETURN n.name
+
+
+Sci-Fi - Entertainment
+Action - Mass Media
+Adventure - Data Science
+Fantasy - Finance
+Drama - Banking
+
+Action
+Mystery
+
+
+MATCH (uc:UseCase {usecase:""}}), (gist:Gist {title:""})
+CREATE (gist)-[r:HAS_USECASE]->(uc)
+RETURN type(r) 
+
+
+//ADD KEEYWORDS :)
+MERGE (n:Keyword {name:"false identities"})
+WITH n
+MATCH (n), (gist:Gist {title:"Bank Fraud Detection"})
+MERGE (gist)-[:HAS_KEYWORD]->(n)
+RETURN n.name
