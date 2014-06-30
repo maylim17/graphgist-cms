@@ -154,25 +154,24 @@ var _getMovieByTitle = function (params, options, callback) {
   };
   console.log(cypher_params.title);
   var query = [
-    'MATCH (movie:Movie {title: {title} })<-[:ACTED_IN]-(actor)',
-    'WITH movie, actor, length((actor)-[:ACTED_IN]->()) as actormoviesweight',
-    'ORDER BY actormoviesweight DESC',
-    'WITH movie, collect({name: actor.name, poster_image: actor.poster_image, weight: actormoviesweight}) as actors', 
-    'MATCH (movie)-[:HAS_DOMAIN]->(genre)',
-    'WITH movie, actors, collect(genre.name) as genres',
-    'MATCH (director)<-[:HAS_USECASE]-(movie)',
-    'WITH movie, actors, genres, collect(director.name) as directors',
-    'MATCH (writer)-[:WRITER_OF]->(movie)',
-    'WITH movie, actors, genres, directors, collect(writer.name) as writers',
-    //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-    'MATCH (movie)-[:HAS_KEYWORD]->(keyword)<-[:HAS_KEYWORD]-(movies:Movie)',
-    'WITH DISTINCT movies as related, count(DISTINCT keyword.name) as keywords, movie, genres, directors, actors, writers',
+    // 'MATCH (movie:Movie {title: {title} })<-[:ACTED_IN]-(actor)',
+    // 'WITH movie, actor, length((actor)-[:ACTED_IN]->()) as actormoviesweight',
+    // 'ORDER BY actormoviesweight DESC',
+    // 'WITH movie, collect({name: actor.name, poster_image: actor.poster_image, weight: actormoviesweight}) as actors', 
+    'MATCH (gist:Gist {title: {title} })-[:HAS_DOMAIN]->(domain)',
+    'WITH gist, collect(domain.name) as domains',
+    'MATCH (usecase)<-[:HAS_USECASE]-(gist)',
+    'WITH gist, domains, collect(usecase.name) as usecases',
+    'MATCH (author)-[:WRITER_OF]->(gist)',
+    'WITH gist, domains, usecases, collect(author.name) as authors',
+    'MATCH (gist)-[:HAS_KEYWORD]->(keyword)<-[:HAS_KEYWORD]-(gists:Gist)',
+    'WITH DISTINCT gists as related, count(DISTINCT keyword.name) as keywords, gist, domains, usecases, authors',
     'ORDER BY keywords DESC',
-    'WITH collect(DISTINCT { related: { title: related.title, poster_image: related.poster_image }, weight: keywords }) as related, movie, actors, genres, directors, writers',
-    'MATCH (movie)-[:HAS_KEYWORD]->(keyword)',
-    'WITH keyword, related, movie, actors, genres, directors, writers',
+    'WITH collect(DISTINCT { related: { title: related.title, poster_image: related.poster_image }, weight: keywords }) as related, gist, domains, usecases, authors',
+    'MATCH (gist)-[:HAS_KEYWORD]->(keyword)',
+    'WITH keyword, related, gist, domains, usecases, authors',
     'LIMIT 10',
-    'RETURN related, collect(keyword.name) as keywords, movie, actors, genres, directors, writers'
+    'RETURN related, collect(keyword.name) as keywords, gist as movie, domains as genres, usecases as directors, authors as writers'
     //related, collect(keyword.name) as keywords (add to RETURN STATEMENT)
   ].join('\n');
 
@@ -193,19 +192,19 @@ var _matchByGenre = function (params, options, callback) {
   callback(null, query, cypher_params);
 };
 
-var _getByActor = function (params, options, callback) {
-  var cypher_params = {
-    name: params.name
-  };
+// var _getByActor = function (params, options, callback) {
+//   var cypher_params = {
+//     name: params.name
+//   };
 
-  var query = [
-    'MATCH (actor:Person {name: {name} })',
-    'MATCH (actor)-[:ACTED_IN]->(movie)', 
-    'RETURN movie'
-  ].join('\n');
+//   var query = [
+//     'MATCH (actor:Person {name: {name} })',
+//     'MATCH (actor)-[:ACTED_IN]->(movie)', 
+//     'RETURN movie'
+//   ].join('\n');
 
-  callback(null, query, cypher_params);
-};
+//   callback(null, query, cypher_params);
+// };
 
 
 var _matchByUUID = Cypher(_matchById, ['id']);

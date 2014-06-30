@@ -40,13 +40,13 @@ Movie.prototype.writer = function (writer) {
   return this.writer;
 };
 
-Movie.prototype.actors = function (actor) {
-    if (actor) {
-    if (actor.name) {
-      this.actor = actor;
-    } else if (actor.data) {
-      this.actor = _.extend(actor.data);
-    }
-  }
-  return this.actor;
-};
+// Movie.prototype.actors = function (actor) {
+//     if (actor) {
+//     if (actor.name) {
+//       this.actor = actor;
+//     } else if (actor.data) {
+//       this.actor = _.extend(actor.data);
+//     }
+//   }
+//   return this.actor;
+// };

@@ -106,45 +106,45 @@ contentApp.controller('MovieListCtrl', ['$scope', '$http', '$templateCache',
 	}]);
 
 
-contentApp.directive('carouselactors', function() {
-	var res = {
-     restrict : 'A',
-     link     : function (scope, element, attrs) {
-           scope.$watch(attrs.carouselactors, function(movie) {  
-           	if(scope.movie != undefined ? scope.movie.actors != undefined ? scope.movie.actors.length > 0 : false : false)
-           	{
-           		movie = scope.movie;
-           		var html = '';
-	            for (var i = 0; i < movie.actors.length; i++) {
-					var actorTitleLink = movie.actors[i].poster_image || '/assets/img/actors/' + movie.actors[i].name.replace('/', ' ') + '.jpg';
-	                 html += '<div class="item">' +
-						          '<div class="thumbnail">' +
-						            '<a href="index.html#/people/' + movie.actors[i].name + '"><img src="' + actorTitleLink + '"/></a>' +
-						          '</div>' +
-						          '<span><a href="index.html#/people/' + movie.actors[i].name + '">' + movie.actors[i].name + '</a></span>' +
-						        '</div>';
+// contentApp.directive('carouselactors', function() {
+// 	var res = {
+//      restrict : 'A',
+//      link     : function (scope, element, attrs) {
+//            scope.$watch(attrs.carouselactors, function(movie) {  
+//            	if(scope.movie != undefined ? scope.movie.actors != undefined ? scope.movie.actors.length > 0 : false : false)
+//            	{
+//            		movie = scope.movie;
+//            		var html = '';
+// 	            for (var i = 0; i < movie.actors.length; i++) {
+// 					var actorTitleLink = movie.actors[i].poster_image || '/assets/img/actors/' + movie.actors[i].name.replace('/', ' ') + '.jpg';
+// 	                 html += '<div class="item">' +
+// 						          '<div class="thumbnail">' +
+// 						            '<a href="index.html#/people/' + movie.actors[i].name + '"><img src="' + actorTitleLink + '"/></a>' +
+// 						          '</div>' +
+// 						          '<span><a href="index.html#/people/' + movie.actors[i].name + '">' + movie.actors[i].name + '</a></span>' +
+// 						        '</div>';
 
-	            }
-            //src="assets/img/actors/' + actorTitleLink + '.jpg"
-            	element[0].innerHTML = html;
+// 	            }
+//             //src="assets/img/actors/' + actorTitleLink + '.jpg"
+//             	element[0].innerHTML = html;
 
-            	setTimeout(function() {
-	            $(element).owlCarousel({
-					items : 7,
-					itemsDesktop : [1199,6],
-					itemsDesktopSmall : [980,5],
-					itemsTablet: [768,5],
-					itemsMobile: [479, 3]
-				});
-				Holder.run();
-	           }, 0);
-			}
+//             	setTimeout(function() {
+// 	            $(element).owlCarousel({
+// 					items : 7,
+// 					itemsDesktop : [1199,6],
+// 					itemsDesktopSmall : [980,5],
+// 					itemsTablet: [768,5],
+// 					itemsMobile: [479, 3]
+// 				});
+// 				Holder.run();
+// 	           }, 0);
+// 			}
         	
-        });
-       }
-   };
-  return res;
-});
+//         });
+//        }
+//    };
+//   return res;
+// });
 
 contentApp.directive('carouselrelatedmovies', function() {
 	var res = {
