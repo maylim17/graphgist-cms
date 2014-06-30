@@ -3,13 +3,13 @@
       <div>
         <ol class="breadcrumb">
           <li><a href="#">Home</a></li>
-          <li><a href="#">GraphGists</a></li>
+          <li><a href="#">Use Cases</a></li>
           <li class="active">{{people.name}}</li>
         </ol>
       </div>
     </div>
     <div class="row">
-      <div class="col-md-9 col-md-push-3 col-sm-8 col-sm-push-4">
+
         <div class="row">
           <div class="col-md-12">
             <h3 class="content-title">{{people.name}}</h3>
@@ -21,26 +21,39 @@
               <li class="active"><a href="#">Details</a></li>
               <li><a href="#">Related</a></li>
             </ul> -->
-            <div class="panel panel-default">
-              <!-- Default panel contents -->
-              <div class="panel-heading"><h4><i>{{people.heading}}</i></h4></div>
-              
 
-              <!-- List group -->
-              <ul class="list-group list-group-details">
-                <!-- <li class="list-group-item">
-                  <div class="panel-heading">Bio: <span class="panel-heading">{people.bio}</span></div>
-                </li> -->
-                <!-- <li class="list-group-item"> -->
-                  <div class="panel-heading">{{people.description}}
-                    <br><br>
-                    <ul><div ng-repeat="point in people.list">
-                      <li>{{point.toString()}}</li><br>
-                    </div></ul>
+            <span ng-show="people.heading!=null">
+                <div class="panel panel-default">
+                  <!-- Default panel contents -->
+                  <div class="panel-heading"><h4><i>{{people.heading}}</i></h4></div>
+                  
+
+                  <!-- List group -->
+                  <ul class="list-group list-group-details">
+                    <!-- <li class="list-group-item">
+                      <div class="panel-heading">Bio: <span class="panel-heading">{people.bio}</span></div>
+                    </li> -->
+                    <!-- <li class="list-group-item"> -->
+                      <div class="panel-heading">
+                        {{people.description}}
+                        <br><br>
+                        <ul><div ng-repeat="point in people.list">
+                          <li>{{point.toString()}}</li><br>
+                        </div></ul>
+                        {{people.description2}}
+
+                        <div class="row">
+                        <!-- <div class="item-label col-md-3">Tagline:</div> -->
+                        <br>
+                        <div class="item-label col-md-12 brand"><a id="gist-link" ng-href="{{people.url}}">Read More ></a></div>
+                      </div>
+                   </div>
+                    <!-- </li> -->
+                  </ul>
                 </div>
-                <!-- </li> -->
-              </ul>
-            </div>
+          </span>
+
+
             <div class="panel panel-default">
               <!-- Default panel contents -->
               <div class="panel-heading">Related GraphGists</div>
@@ -60,10 +73,10 @@
                 </div>
             </div> -->
           </div>
-        </div>
+
       </div>
       <div class="clearfix visible-xs"></div>
-      <div class="col-md-3 col-md-pull-9 col-sm-4 col-sm-pull-8">
+<!--       <div class="col-md-3 col-md-pull-9 col-sm-4 col-sm-pull-8">
         <div class="row">
           <div class="col-md-12 col-sm-12 col-xs-12">
             <div class="thumbnail">
@@ -71,6 +84,6 @@
             </div>
           </div>
         </div>
-      </div>
+      </div> -->
     </div>
   </div>

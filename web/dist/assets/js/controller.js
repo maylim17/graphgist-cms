@@ -309,4 +309,3 @@ contentApp.controller('PeopleItemCtrl', ['$scope', '$routeParams', '$http', '$te
 
 	  	fetchPeople();
   }]);
-			

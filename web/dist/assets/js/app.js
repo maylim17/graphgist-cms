@@ -22,6 +22,7 @@ contentApp.config(['$routeProvider',
         templateUrl: 'assets/partials/people-detail.html',
         controller: 'PeopleItemCtrl'
       }).
+
       otherwise({
         redirectTo: '/movies'
       });

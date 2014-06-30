@@ -23,7 +23,7 @@
             </ul> -->
             <div class="panel panel-default">
               <!-- Default panel contents -->
-              <div class="panel-heading">GraphGist Summary</div>
+              <div class="panel-heading" id="panel-heading">GraphGist Summary</div>
               <div class="panel-body">
                 <p>
                   {{movie.summary}}
@@ -98,7 +98,6 @@
                <div class="row">
                   <div class="item-label col-md-3">Keywords:</div>
                 </div>
-                <!-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ -->
                 <div class="row">
                   <div class="col-md-9"><span ng-repeat="keyword in movie.keywords">{{keyword.toString()}}{{{true: '', false: ', '}[$last]}}</span></div>
                 </div>
