@@ -98,7 +98,7 @@ var _getDirectorByMovie = function (params, options, callback) {
   };
 
   var query = [
-    'MATCH (movie:Movie {title: {title}})',
+    'MATCH (movie:Gist {title: {title}})',
     'MATCH (person)<-[:HAS_USECASE]-(movie)', 
     'RETURN DISTINCT person'
   ].join('\n');
@@ -129,7 +129,7 @@ var _getRolesByMovie = function (params, options, callback) {
   };
 
   var query = [
-    'MATCH (movie:Movie {title: {title}})',
+    'MATCH (movie:Gist {title: {title}})',
     'MATCH (people:Person)-[relatedTo]-(movie)', 
     'RETURN { movietitle: movie.title, name: people.name, roletype: type(relatedTo) } as role'
   ].join('\n');
@@ -143,7 +143,7 @@ var _getViewByName = function (params, options, callback) {
   };
 
   var query = [
-    'MATCH (person:Person{name: {name}})-[relatedTo]-(movie:Movie)', 
+    'MATCH (person:Person{name: {name}})-[relatedTo]-(movie:Gist)', 
     'OPTIONAL MATCH (person)-[:ACTED_IN]->(movies)<-[:ACTED_IN]-(people)',
     'WITH DISTINCT { name: people.name, poster_image: people.poster_image } as related, count(DISTINCT movies) as weight, movie, person',
     'ORDER BY weight DESC',
