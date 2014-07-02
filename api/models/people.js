@@ -82,9 +82,12 @@ var _matchBy = function (keys, params, options, callback) {
   var cypher_params = _.pick(params, keys);
 
   var query = [
-    'MATCH (person:Person)',
-    Cypher.where('person', keys),
-    'RETURN person'
+    'MATCH (node)',
+    'WHERE node:Domain OR node:UseCase',
+    'WITH node',
+    'MATCH (node)',
+    Cypher.where('node', keys),
+    'RETURN node as person'
   ].join('\n');
 
   callback(null, query, cypher_params);
@@ -106,36 +109,36 @@ var _getDirectorByMovie = function (params, options, callback) {
   callback(null, query, cypher_params);
 };
 
-var _getCoActorsByPerson = function (params, options, callback) {
-  var cypher_params = {
-    name: params.name
-  };
+// var _getCoActorsByPerson = function (params, options, callback) {
+//   var cypher_params = {
+//     name: params.name
+//   };
 
-  var query = [
-    'MATCH (actor:Person {name: {name}})',
-    'MATCH (actor)-[:ACTED_IN]->(m)',
-    'WITH m, actor',
-    'MATCH (m)<-[:ACTED_IN]-(person:Person)',
-    'WHERE actor <> person', 
-    'RETURN person'
-  ].join('\n');
+//   var query = [
+//     'MATCH (actor:Person {name: {name}})',
+//     'MATCH (actor)-[:ACTED_IN]->(m)',
+//     'WITH m, actor',
+//     'MATCH (m)<-[:ACTED_IN]-(person:Person)',
+//     'WHERE actor <> person', 
+//     'RETURN person'
+//   ].join('\n');
 
-  callback(null, query, cypher_params);
-};
+//   callback(null, query, cypher_params);
+// };
 
-var _getRolesByMovie = function (params, options, callback) {
-  var cypher_params = {
-    title: params.title
-  };
+// var _getRolesByMovie = function (params, options, callback) {
+//   var cypher_params = {
+//     title: params.title
+//   };
 
-  var query = [
-    'MATCH (movie:Gist {title: {title}})',
-    'MATCH (people:Person)-[relatedTo]-(movie)', 
-    'RETURN { movietitle: movie.title, name: people.name, roletype: type(relatedTo) } as role'
-  ].join('\n');
+//   var query = [
+//     'MATCH (movie:Gist {title: {title}})',
+//     'MATCH (people:Person)-[relatedTo]-(movie)', 
+//     'RETURN { movietitle: movie.title, name: people.name, roletype: type(relatedTo) } as role'
+//   ].join('\n');
 
-  callback(null, query, cypher_params);
-};
+//   callback(null, query, cypher_params);
+// };
 
 var _getViewByName = function (params, options, callback) {
   var cypher_params = {
@@ -143,11 +146,14 @@ var _getViewByName = function (params, options, callback) {
   };
 
   var query = [
-    'MATCH (person:Person{name: {name}})-[relatedTo]-(movie:Gist)', 
-    'OPTIONAL MATCH (person)-[:ACTED_IN]->(movies)<-[:ACTED_IN]-(people)',
-    'WITH DISTINCT { name: people.name, poster_image: people.poster_image } as related, count(DISTINCT movies) as weight, movie, person',
+    // 'MATCH (node)', 
+    // 'WHERE node:Domain OR node:UseCase AND node.name= {name}',
+    // 'WITH node',
+    'MATCH (node:Category {name: {name}})-[relatedTo]-(gists:Gist)',  
+    'OPTIONAL MATCH (node)<-[:HAS_USECASE|HAS_DOMAIN]-(gist)-[:HAS_USECASE|HAS_DOMAIN]->(nodes)',
+    'WITH DISTINCT { name: nodes.name, poster_image: nodes.poster_image } as related, count(DISTINCT gists) as weight, gist, node',
     'ORDER BY weight DESC',
-    'RETURN collect(DISTINCT { title: movie.title, poster_image: movie.poster_image }) as movie, collect(DISTINCT { related: related, weight: weight }) as related, person'
+    'RETURN collect(DISTINCT { title: gist.title, poster_image: gist.poster_image }) as movie, collect(DISTINCT { related: related, weight: weight }) as related, node as person'
   ].join('\n');
 
   callback(null, query, cypher_params);
@@ -155,7 +161,7 @@ var _getViewByName = function (params, options, callback) {
 
 
 
-var _matchByUUID = _.partial(_matchBy, ['id']);
+// var _matchByUUID = _.partial(_matchBy, ['id']);
 var _matchAll = _.partial(_matchBy, []);
 
 // gets n random people
@@ -165,8 +171,9 @@ var _getRandom = function (params, options, callback) {
   };
 
   var query = [
-    'MATCH (person:Person)',
-    'RETURN person, rand() as rnd',
+    'MATCH (node)',
+    'WHERE node:Domain OR node:UseCase',
+    'RETURN node, rand() as rnd',
     'ORDER BY rnd',
     'LIMIT {n}'
   ].join('\n');
@@ -178,8 +185,9 @@ var _getAllCount = function (params, options, callback) {
   var cypher_params = {};
 
   var query = [
-    'MATCH (person:Person)',
-    'RETURN COUNT(person) as c'
+    'MATCH (node)',
+    'WHERE node:Domain OR node:UseCase',
+    'RETURN COUNT(node) as c'
   ].join('\n');
 
   callback(null, query, cypher_params);
@@ -191,10 +199,14 @@ var _updateName = function (params, options, callback) {
     name : params.name
   };
 
+//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ id?
   var query = [
-    'MATCH (person:Person {id:{id}})',
-    'SET person.name = {name}',
-    'RETURN person'
+    'MATCH (node)',
+    'WHERE node:Domain OR node:UseCase',
+    'WITH node',
+    'MATCH (node {id:{id}})',
+    'SET node.name = {name}',
+    'RETURN node as person'
   ].join('\n');
 
   callback(null, query, cypher_params);
@@ -207,13 +219,17 @@ var _create = function (params, options, callback) {
     name: params.name
   };
 
+//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ id?
   var query = [
-    'MERGE (person:Person {name: {name}, id: {id}})',
+    'MERGE (node)',
+    'WHERE node:Domain OR node:UseCase',
+    'WITH node',
+    'MERGE (node {name: {name}, id: {id}})',
     'ON CREATE',
-    'SET person.created = timestamp()',
+    'SET node.created = timestamp()',
     'ON MATCH',
-    'SET person.lastLogin = timestamp()',
-    'RETURN person'
+    'SET node.lastLogin = timestamp()',
+    'RETURN node as person'
   ].join('\n');
 
   callback(null, query, cypher_params);
@@ -225,10 +241,14 @@ var _delete = function (params, options, callback) {
     id: params.id
   };
 
+//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ id?
   var query = [
-    'MATCH (person:Person {id:{id}})',
-    'OPTIONAL MATCH (person)-[r]-()',
-    'DELETE person, r',
+    'MATCH (node)',
+    'WHERE node:Domain OR node:UseCase',
+    'WITH node',
+    'MATCH (node {id:{id}})',
+    'OPTIONAL MATCH (node)-[r]-()',
+    'DELETE node, r',
   ].join('\n');
   callback(null, query, cypher_params);
 };
@@ -238,27 +258,28 @@ var _deleteAll = function (params, options, callback) {
   var cypher_params = {};
 
   var query = [
-    'MATCH (person:Person)',
-    'OPTIONAL MATCH (person)-[r]-()',
-    'DELETE person, r',
+    'MATCH (node)',
+    'OPTIONAL MATCH (node)-[r]-()',
+    'WHERE node:Domain OR node:UseCase',
+    'DELETE node, r',
   ].join('\n');
   callback(null, query, cypher_params);
 };
 
 // get a single person by id
-var getById = Cypher(_matchByUUID, _singlePerson);
+// var getById = Cypher(_matchByUUID, _singlePerson);
 
 // get a single person by name
 var getByName = Cypher(_getViewByName, _singlePerson);
 
 // Get a director of a movie
-var getDirectorByMovie = Cypher(_getDirectorByMovie, _singlePerson);
+// var getDirectorByMovie = Cypher(_getDirectorByMovie, _singlePerson);
 
 // get movie roles
-var getRolesByMovie = Cypher(_getRolesByMovie, _manyRoles);
+// var getRolesByMovie = Cypher(_getRolesByMovie, _manyRoles);
 
 // Get a director of a movie
-var getCoActorsByPerson = Cypher(_getCoActorsByPerson, _manyPersons);
+// var getCoActorsByPerson = Cypher(_getCoActorsByPerson, _manyPersons);
 
 // get n random people
 var getRandom = Cypher(_getRandom, _manyPersons);
@@ -332,9 +353,9 @@ var resetPersons = function (params, options, callback) {
 
 module.exports = {
   getAll: getAll,
-  getById: getById,
+  // getById: getById,
   getByName: getByName,
-  getDirectorByMovie: getDirectorByMovie,
-  getCoActorsByPerson: getCoActorsByPerson,
-  getRolesByMovie: getRolesByMovie
+  // getDirectorByMovie: getDirectorByMovie,
+  // getCoActorsByPerson: getCoActorsByPerson,
+  // getRolesByMovie: getRolesByMovie
 };

@@ -2,6 +2,6 @@
 
 var _ = require('underscore');
 
-var Person = module.exports = function (_node) {
+var Domain = module.exports = function (_node) {
   _(this).extend(_node.data);
 };

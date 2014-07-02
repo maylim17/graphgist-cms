@@ -3,9 +3,9 @@ module.exports = {
     "id":"Envelope",
     "properties":{
       "response":[
-        "Person",
+        "Domain",
         "Movie",
-        "List[Person]",
+        "List[Domain]",
         "List[Movie]",
       ],
       "responseTime":"integer",
@@ -39,8 +39,8 @@ module.exports = {
       }
     }
   },
-  "Person":{
-    "id":"Person",
+  "Domain":{
+    "id":"Domain",
     // "required": ["id"],
     "properties":{
       "id":{

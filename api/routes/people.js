@@ -43,7 +43,7 @@ exports.list = {
     "params" : [
       // param.query("friends", "Include friends", "boolean", false, false, "LIST[true, false]", "true")
     ],
-    "responseClass" : "List[Person]",
+    "responseClass" : "List[Domain]",
     "errorResponses" : [swe.notFound('people')],
     "nickname" : "getPeople"
   },
@@ -78,7 +78,7 @@ exports.findPersonByDirectedMovie = {
     "params" : [
       param.path("title", "Title of the movie that the person directed", "string")
     ],
-    "responseClass" : "Person",
+    "responseClass" : "Domain",
     "errorResponses" : [swe.invalid('title'), swe.notFound('person')],
     "nickname" : "getPersonByDirectedMovie"
   },
@@ -116,7 +116,7 @@ exports.findActorsByCoActor = {
     "params" : [
       param.path("name", "Name of the person with co-actors", "string")
     ],
-    "responseClass" : "List[Person]",
+    "responseClass" : "List[Domain]",
     "errorResponses" : [swe.notFound('people')],
     "nickname" : "getCoActorsOfPerson"
   },
@@ -210,7 +210,7 @@ exports.addPerson = {
     "notes" : "adds a person to the graph",
     "summary" : "Add a new person to the graph",
     "method": "POST",
-    "responseClass" : "List[Person]",
+    "responseClass" : "List[Domain]",
     "params" : [
       param.query("name", "Person name, seperate multiple names by commas", "string", true, true)
     ],
@@ -243,7 +243,7 @@ exports.addRandomPeople = {
     "notes" : "adds many random people to the graph",
     "summary" : "Add many random new people to the graph",
     "method": "POST",
-    "responseClass" : "List[Person]",
+    "responseClass" : "List[Domain]",
     "params" : [
       param.path("n", "Number of random people to be created", "integer", null, 1)
     ],
@@ -278,7 +278,7 @@ exports.findByName = {
     "params" : [
       param.path("name", "Name of person that needs to be fetched", "string")
     ],
-    "responseClass" : "Person",
+    "responseClass" : "Domain",
     "errorResponses" : [swe.invalid('name'), swe.notFound('person')],
     "nickname" : "getPersonByName"
   },
