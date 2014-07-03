@@ -2,12 +2,12 @@
 
 var _ = require('underscore');
 
-var Movie = module.exports = function (_node) {
+var Gist = module.exports = function (_node) {
   _(this).extend(_node.data);
 };
 
 
-Movie.prototype.genres = function (genre) {
+Gist.prototype.genres = function (genre) {
     if (genre) {
     if (genre.name) {
       this.genre = genre;
@@ -18,7 +18,7 @@ Movie.prototype.genres = function (genre) {
   return this.genre;
 };
 
-Movie.prototype.director = function (director) {
+Gist.prototype.director = function (director) {
     if (director) {
     if (director.name) {
       this.director = director;
@@ -29,7 +29,7 @@ Movie.prototype.director = function (director) {
   return this.director;
 };
 
-Movie.prototype.writer = function (writer) {
+Gist.prototype.writer = function (writer) {
     if (writer) {
     if (writer.name) {
       this.writer = writer;
@@ -40,7 +40,7 @@ Movie.prototype.writer = function (writer) {
   return this.writer;
 };
 
-// Movie.prototype.actors = function (actor) {
+// Gist.prototype.actors = function (actor) {
 //     if (actor) {
 //     if (actor.name) {
 //       this.actor = actor;

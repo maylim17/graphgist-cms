@@ -68,19 +68,19 @@ exports.list = {
   }
 };
 
-exports.findPersonByDirectedMovie = {
+exports.findPersonByDirectedGist = {
   'spec': {
     "description" : "Find a director",
-    "path" : "/people/director/movie/{title}",
-    "notes" : "Returns a person who directed a movie",
-    "summary" : "Find person who directed a movie by title",
+    "path" : "/people/director/gist/{title}",
+    "notes" : "Returns a person who directed a gist",
+    "summary" : "Find person who directed a gist by title",
     "method": "GET",
     "params" : [
-      param.path("title", "Title of the movie that the person directed", "string")
+      param.path("title", "Title of the gist that the person directed", "string")
     ],
     "responseClass" : "Domain",
     "errorResponses" : [swe.invalid('title'), swe.notFound('person')],
-    "nickname" : "getPersonByDirectedMovie"
+    "nickname" : "getPersonByDirectedGist"
   },
   'action': function (req,res) {
     var title = req.params.title;
@@ -101,7 +101,7 @@ exports.findPersonByDirectedMovie = {
     };
 
 
-    People.getDirectorByMovie(params, options, callback);
+    People.getDirectorByGist(params, options, callback);
 
   }
 };
@@ -110,8 +110,8 @@ exports.findActorsByCoActor = {
   'spec': {
     "description" : "Find co-actors of person",
     "path" : "/people/coactors/person/{name}",
-    "notes" : "Returns all people that acted in a movie with a person",
-    "summary" : "Find all people that acted in a movie with a person",
+    "notes" : "Returns all people that acted in a gist with a person",
+    "summary" : "Find all people that acted in a gist with a person",
     "method": "GET",
     "params" : [
       param.path("name", "Name of the person with co-actors", "string")
@@ -143,19 +143,19 @@ exports.findActorsByCoActor = {
   }
 };
 
-exports.findRolesByMovie = {
+exports.findRolesByGist = {
   'spec': {
-    "description" : "Find people with a role in a movie",
-    "path" : "/people/roles/movie/{title}",
-    "notes" : "Returns all people and their role in a movie",
-    "summary" : "Find all people and their role in a movie",
+    "description" : "Find people with a role in a gist",
+    "path" : "/people/roles/gist/{title}",
+    "notes" : "Returns all people and their role in a gist",
+    "summary" : "Find all people and their role in a gist",
     "method": "GET",
     "params" : [
-      param.path("title", "Title of the movie", "string")
+      param.path("title", "Title of the gist", "string")
     ],
     "responseClass" : "List[Role]",
     "errorResponses" : [swe.notFound('roles')],
-    "nickname" : "getRolesByMovie"
+    "nickname" : "getRolesByGist"
   },
   'action': function (req, res) {
     var title = req.params.title;
@@ -176,7 +176,7 @@ exports.findRolesByMovie = {
     };
 
 
-    People.getRolesByMovie(params, options, callback);
+    People.getRolesByGist(params, options, callback);
   }
 };
 

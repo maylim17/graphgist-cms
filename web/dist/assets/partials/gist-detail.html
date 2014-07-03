@@ -1,10 +1,10 @@
-<div class="container hidden-content" ng-model="movie">
+<div class="container hidden-content" ng-model="gist">
     <div class="row">
       <div>
         <ol class="breadcrumb">
           <li><a href="#">Home</a></li>
           <li><a href="#">GraphGists</a></li>
-          <li class="active">{{movie.title}}</li>
+          <li class="active">{{gist.title}}</li>
         </ol>
       </div>
     </div>
@@ -12,7 +12,7 @@
       <div class="col-md-8 col-md-push-4 col-sm-8 col-sm-push-4">
         <div class="row">
           <div class="col-md-12">
-            <h3 class="content-title">{{movie.title}}</h3>
+            <h3 class="content-title">{{gist.title}}</h3>
           </div>
         </div>
         <div class="row">
@@ -26,26 +26,26 @@
               <div class="panel-heading" id="panel-heading">GraphGist Summary</div>
               <div class="panel-body">
                 <p>
-                  {{movie.summary}}
+                  {{gist.summary}}
                 </p>
               </div>
 
               <!-- List group -->
               <ul class="list-group list-group-details">
                 <li class="list-group-item">
-                  <div class="panel-heading">Rated: <span class="panel-heading">{{movie.rated}}</span></div>
+                  <div class="panel-heading">Rated: <span class="panel-heading">{{gist.rated}}</span></div>
                 </li>
 <!--                 <li class="list-group-item">
-                  <div class="panel-heading">Duration: <span class="panel-heading">{{movie.duration + ' min'}}</span></div>
+                  <div class="panel-heading">Duration: <span class="panel-heading">{{gist.duration + ' min'}}</span></div>
                 </li> -->
                 <li class="list-group-item">
-                  <div class="panel-heading">Domains: <span class="panel-heading genre-list"><span ng-repeat="genre in movie.genres | orderBy:'toString()'"><a href="/index.html#/people/{{genre.toString()}}">{{genre.toString()}}{{{true: '', false: ', '}[$last]}}</a></span></span></div>
+                  <div class="panel-heading">Domains: <span class="panel-heading genre-list"><span ng-repeat="genre in gist.genres | orderBy:'toString()'"><a href="/index.html#/people/{{genre.toString()}}">{{genre.toString()}}{{{true: '', false: ', '}[$last]}}</a></span></span></div>
                 </li>
                 <li class="list-group-item">
-                  <div class="panel-heading">Use Cases: <span class="panel-heading genre-list"><span ng-repeat="director in movie.directors | orderBy:'toString()'"><a href="/index.html#/people/{{director.toString()}}">{{director}}{{{true: '', false: ', '}[$last]}}</a></span></span></div>
+                  <div class="panel-heading">Use Cases: <span class="panel-heading genre-list"><span ng-repeat="usecase in gist.usecases | orderBy:'toString()'"><a href="/index.html#/people/{{usecase.toString()}}">{{usecase}}{{{true: '', false: ', '}[$last]}}</a></span></span></div>
                 </li>
                 <li class="list-group-item">
-                  <div class="panel-heading">Authored By: <span class="panel-heading genre-list"><span ng-repeat="writer in movie.writers">{{writer}}{{{true: '', false: ', '}[$last]}}</span></span></div>
+                  <div class="panel-heading">Authored By: <span class="panel-heading genre-list"><span ng-repeat="writer in gist.writers">{{writer}}{{{true: '', false: ', '}[$last]}}</span></span></div>
                 </li>
               </ul>
             </div>
@@ -53,7 +53,7 @@
              
               <div class="panel-heading">Domains</div>
               <div class="panel-body">
-                  <div id="owl-demo-cast" carouselactors="movie" class="owl-carousel owl-theme actors">
+                  <div id="owl-demo-cast" carouselactors="gist" class="owl-carousel owl-theme actors">
                 
                   </div>
                 </div>
@@ -62,8 +62,8 @@
               <!-- Default panel contents -->
               <div class="panel-heading">Related GraphGists</div>
               <div class="panel-body">
-                  <div id="owl-demo-cast" carouselrelatedmovies="movie" class="owl-carousel owl-theme actors">
-                    <!-- Related movies -->
+                  <div id="owl-demo-cast" carouselrelatedgists="gist" class="owl-carousel owl-theme actors">
+                    <!-- Related gists -->
                   </div>
                 </div>
             </div>
@@ -75,7 +75,7 @@
         <div class="row">
           <div class="col-md-12 col-sm-12 col-xs-12">
             <div class="thumbnail">
-              <img ng-src="{{movie.poster_image}}" alt="{{movie.title}}">
+              <img ng-src="{{gist.poster_image}}" alt="{{gist.title}}">
             </div>
           </div>
         </div>
@@ -89,17 +89,17 @@
                 <div class="row">
                   <!-- <div class="item-label col-md-3">Tagline:</div> -->
                   <br>
-                  <div class="item-label col-md-12 brand"><a id="gist-link" ng-href="{{movie.tagline}}">Go to GraphGist page ></a></div>
+                  <div class="item-label col-md-12 brand"><a id="gist-link" ng-href="{{gist.tagline}}">Go to GraphGist page ></a></div>
                 </div>
                 <br>
 <!--                 <div class="row">
-                  <div class="col-md-9">{{movie.tagline}}</div>
+                  <div class="col-md-9">{{gist.tagline}}</div>
                 </div> -->
                <div class="row">
                   <div class="item-label col-md-3">Keywords:</div>
                 </div>
                 <div class="row">
-                  <div class="col-md-9"><span ng-repeat="keyword in movie.keywords">{{keyword.toString()}}{{{true: '', false: ', '}[$last]}}</span></div>
+                  <div class="col-md-9"><span ng-repeat="keyword in gist.keywords">{{keyword.toString()}}{{{true: '', false: ', '}[$last]}}</span></div>
                 </div>
             </div>
           </div>

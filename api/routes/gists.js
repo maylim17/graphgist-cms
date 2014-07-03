@@ -1,5 +1,5 @@
-// movies.js
-var Movies = require('../models/movies');
+// gists.js
+var Gists = require('../models/gists');
 var sw = require("swagger-node-express");
 var param = sw.params;
 var url = require("url");
@@ -35,47 +35,47 @@ function parseBool (req, key) {
 
 exports.list = {
   'spec': {
-    "description" : "List all movies",
-    "path" : "/movies",
-    "notes" : "Returns all movies",
-    "summary" : "Find all movies",
+    "description" : "List all gists",
+    "path" : "/gists",
+    "notes" : "Returns all gists",
+    "summary" : "Find all gists",
     "method": "GET",
     "params" : [],
-    "responseClass" : "List[Movie]",
-    "errorResponses" : [swe.notFound('movies')],
-    "nickname" : "getMovies"
+    "responseClass" : "List[Gist]",
+    "errorResponses" : [swe.notFound('gists')],
+    "nickname" : "getGists"
   },
   'action': function (req, res) {
     var options = {
       neo4j: parseBool(req, 'neo4j')
     };
     var start = new Date();
-    Movies.getAll(null, options, function (err, response) {
-      if (err || !response.results) throw swe.notFound('movies');
+    Gists.getAll(null, options, function (err, response) {
+      if (err || !response.results) throw swe.notFound('gists');
       writeResponse(res, response, start);
     });
   }
 };
 
-exports.movieCount = {
+exports.gistCount = {
   'spec': {
-    "description" : "Movie count",
-    "path" : "/movies/count",
-    "notes" : "Movie count",
-    "summary" : "Movie count",
+    "description" : "Gist count",
+    "path" : "/gists/count",
+    "notes" : "Gist count",
+    "summary" : "Gist count",
     "method": "GET",
     "params" : [],
     "responseClass" : "Count",
-    "errorResponses" : [swe.notFound('movies')],
-    "nickname" : "movieCount"
+    "errorResponses" : [swe.notFound('gists')],
+    "nickname" : "gistCount"
   },
   'action': function (req, res) {
     var options = {
       neo4j: parseBool(req, 'neo4j')
     };
     var start = new Date();
-    Movies.getAllCount(null, options, function (err, response) {
-      // if (err || !response.results) throw swe.notFound('movies');
+    Gists.getAllCount(null, options, function (err, response) {
+      // if (err || !response.results) throw swe.notFound('gists');
       writeResponse(res, response, start);
     });
   }
@@ -83,17 +83,17 @@ exports.movieCount = {
 
 exports.findById = {
   'spec': {
-    "description" : "find a movie",
-    "path" : "/movies/{id}",
-    "notes" : "Returns a movie based on ID",
-    "summary" : "Find movie by ID",
+    "description" : "find a gist",
+    "path" : "/gists/{id}",
+    "notes" : "Returns a gist based on ID",
+    "summary" : "Find gist by ID",
     "method": "GET",
     "params" : [
-      param.path("id", "ID of movie that needs to be fetched", "integer")
+      param.path("id", "ID of gist that needs to be fetched", "integer")
     ],
-    "responseClass" : "Movie",
-    "errorResponses" : [swe.invalid('id'), swe.notFound('movie')],
-    "nickname" : "getMovieById"
+    "responseClass" : "Gist",
+    "errorResponses" : [swe.invalid('id'), swe.notFound('gist')],
+    "nickname" : "getGistById"
   },
   'action': function (req,res) {
     var id = req.params.id;
@@ -109,29 +109,29 @@ exports.findById = {
     };
 
     var callback = function (err, response) {
-      if (err) throw swe.notFound('movie');
+      if (err) throw swe.notFound('gist');
       writeResponse(res, response, start);
     };
 
 
-    Movies.getById(params, options, callback);
+    Gists.getById(params, options, callback);
 
   }
 };
 
 exports.findByTitle = {
   'spec': {
-    "description" : "Find a movie",
-    "path" : "/movies/title/{title}",
-    "notes" : "Returns a movie based on title",
-    "summary" : "Find movie by title",
+    "description" : "Find a gist",
+    "path" : "/gists/title/{title}",
+    "notes" : "Returns a gist based on title",
+    "summary" : "Find gist by title",
     "method": "GET",
     "params" : [
-      param.path("title", "Title of movie that needs to be fetched", "string")
+      param.path("title", "Title of gist that needs to be fetched", "string")
     ],
-    "responseClass" : "Movie",
-    "errorResponses" : [swe.invalid('title'), swe.notFound('movie')],
-    "nickname" : "getMovieByTitle"
+    "responseClass" : "Gist",
+    "errorResponses" : [swe.invalid('title'), swe.notFound('gist')],
+    "nickname" : "getGistByTitle"
   },
   'action': function (req,res) {
     var title = req.params.title;
@@ -146,8 +146,8 @@ exports.findByTitle = {
       title: title
     };
 
-    Movies.getByTitle(params, options, function (err, response) {
-        if (err) throw swe.notFound('movies');
+    Gists.getByTitle(params, options, function (err, response) {
+        if (err) throw swe.notFound('gists');
         writeResponse(res, response, start);
       });
 
@@ -156,17 +156,17 @@ exports.findByTitle = {
 
 exports.findByGenre = {
   'spec': {
-    "description" : "Find a movie",
-    "path" : "/movies/genre/{name}",
-    "notes" : "Returns movies based on genre",
-    "summary" : "Find movie by genre",
+    "description" : "Find a gist",
+    "path" : "/gists/genre/{name}",
+    "notes" : "Returns gists based on genre",
+    "summary" : "Find gist by genre",
     "method": "GET",
     "params" : [
       param.path("name", "The name of the genre", "string")
     ],
-    "responseClass" : "Movie",
-    "errorResponses" : [swe.invalid('name'), swe.notFound('movie')],
-    "nickname" : "getMoviesByGenre"
+    "responseClass" : "Gist",
+    "errorResponses" : [swe.invalid('name'), swe.notFound('gist')],
+    "nickname" : "getGistsByGenre"
   },
   'action': function (req,res) {
     var name = req.params.name;
@@ -181,28 +181,28 @@ exports.findByGenre = {
       name: name
     };
 
-    Movies.getByGenre(params, options, function (err, response) {
-        if (err) throw swe.notFound('movies');
+    Gists.getByGenre(params, options, function (err, response) {
+        if (err) throw swe.notFound('gists');
         writeResponse(res, response, start);
       });
 
   }
 };
 
-exports.findMoviesByDateRange = {
+exports.findGistsByDateRange = {
   'spec': {
-    "description" : "Find movies",
-    "path" : "/movies/daterange/{start}/{end}",
-    "notes" : "Returns movies between a year range",
-    "summary" : "Find movie by year range",
+    "description" : "Find gists",
+    "path" : "/gists/daterange/{start}/{end}",
+    "notes" : "Returns gists between a year range",
+    "summary" : "Find gist by year range",
     "method": "GET",
     "params" : [
-      param.path("start", "Year that the movie was released on or after", "integer"),
-      param.path("end", "Year that the movie was released before", "integer")
+      param.path("start", "Year that the gist was released on or after", "integer"),
+      param.path("end", "Year that the gist was released before", "integer")
     ],
-    "responseClass" : "Movie",
-    "errorResponses" : [swe.invalid('start'), swe.invalid('end'), swe.notFound('movie')],
-    "nickname" : "getMoviesByDateRange"
+    "responseClass" : "Gist",
+    "errorResponses" : [swe.invalid('start'), swe.invalid('end'), swe.notFound('gist')],
+    "nickname" : "getGistsByDateRange"
   },
   'action': function (req,res) {
     var start = req.params.start;
@@ -220,29 +220,29 @@ exports.findMoviesByDateRange = {
     };
 
     var callback = function (err, response) {
-      if (err) throw swe.notFound('movie');
+      if (err) throw swe.notFound('gist');
       writeResponse(res, response, new Date());
     };
 
 
-    Movies.getByDateRange(params, options, callback);
+    Gists.getByDateRange(params, options, callback);
 
   }
 };
 
-exports.findMoviesByActor = {
+exports.findGistsByActor = {
   'spec': {
-    "description" : "Find movies",
-    "path" : "/movies/actor/{name}",
-    "notes" : "Returns movies that a person acted in",
-    "summary" : "Find movies by actor",
+    "description" : "Find gists",
+    "path" : "/gists/actor/{name}",
+    "notes" : "Returns gists that a person acted in",
+    "summary" : "Find gists by actor",
     "method": "GET",
     "params" : [
-      param.path("name", "Name of the actor who acted in movies", "string")
+      param.path("name", "Name of the actor who acted in gists", "string")
     ],
-    "responseClass" : "Movie",
-    "errorResponses" : [swe.invalid('name'), swe.notFound('movie')],
-    "nickname" : "getMoviesByActor"
+    "responseClass" : "Gist",
+    "errorResponses" : [swe.invalid('name'), swe.notFound('gist')],
+    "nickname" : "getGistsByActor"
   },
   'action': function (req,res) {
     var name = req.params.name;
@@ -257,12 +257,12 @@ exports.findMoviesByActor = {
     };
 
     var callback = function (err, response) {
-      if (err) throw swe.notFound('movie');
+      if (err) throw swe.notFound('gist');
       writeResponse(res, response, new Date());
     };
 
 
-    Movies.getByActor(params, options, callback);
+    Gists.getByActor(params, options, callback);
 
   }
 };

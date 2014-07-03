@@ -10,13 +10,13 @@ var contentApp = angular.module('contentApp', [
 contentApp.config(['$routeProvider',
   function($routeProvider) {
     $routeProvider.
-      when('/movies', {
+      when('/gists', {
         templateUrl: 'assets/partials/home.html',
-        controller: 'MovieListCtrl'
+        controller: 'GistListCtrl'
       }).
-      when('/movies/:movieId', {
-        templateUrl: 'assets/partials/movie-detail.html',
-        controller: 'MovieItemCtrl'
+      when('/gists/:gistId', {
+        templateUrl: 'assets/partials/gist-detail.html',
+        controller: 'GistItemCtrl'
       }).
       when('/people/:peopleId', {
         templateUrl: 'assets/partials/people-detail.html',
@@ -24,7 +24,7 @@ contentApp.config(['$routeProvider',
       }).
 
       otherwise({
-        redirectTo: '/movies'
+        redirectTo: '/gists'
       });
   }]);
 

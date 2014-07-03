@@ -1,5 +1,5 @@
 /**
- *  neo4j movie functions
+ *  neo4j gist functions
  *  these are mostly written in a functional style
  */
 
@@ -7,7 +7,7 @@
 var _ = require('underscore');
 var uuid = require('hat'); // generates uuids
 var Cypher = require('../neo4j/cypher');
-var Movie = require('../models/neo4j/movie');
+var Gist = require('../models/neo4j/gist');
 var async = require('async');
 var randomName = require('random-name');
 
@@ -30,48 +30,48 @@ function _randomNames (n) {
  *  to be combined with queries using _.partial()
  */
 
-// return a single movie
-var _singleMovie = function (results, callback) {
+// return a single gist
+var _singleGist = function (results, callback) {
   if (results.length) {
-    callback(null, new Movie(results[0].movie));
+    callback(null, new Gist(results[0].gist));
   } else {
     callback(null, null);
   }
 };
 
-var _singleMovieWithGenres = function (results, callback) {
+var _singleGistWithGenres = function (results, callback) {
     if (results.length)
     {
-      var thisMovie = new Movie(results[0].movie);
-      thisMovie.genres = results[0].genres;
-      thisMovie.directors = results[0].directors;
-      thisMovie.writers = results[0].writers;
-      thisMovie.actors = results[0].actors;
-      thisMovie.related = results[0].related;
-      thisMovie.keywords = results[0].keywords;
-      callback(null, thisMovie);
+      var thisGist = new Gist(results[0].gist);
+      thisGist.genres = results[0].genres;
+      thisGist.usecases = results[0].usecases;
+      thisGist.writers = results[0].writers;
+      // thisGist.actors = results[0].actors;
+      thisGist.related = results[0].related;
+      thisGist.keywords = results[0].keywords;
+      callback(null, thisGist);
     } else {
       callback(null, null);
     }
 };
 
-// return many movies
-var _manyMovies = function (results, callback) {
-  var movies = _.map(results, function (result) {
-    return new Movie(result.movie);
+// return many gists
+var _manyGists = function (results, callback) {
+  var gists = _.map(results, function (result) {
+    return new Gist(result.gist);
   });
 
-  callback(null, movies);
+  callback(null, gists);
 };
 
-var _manyMoviesWithGenres = function (results, callback) {
-  var movies = _.map(results, function (result) {
-    var thisMovie = new Movie(result.movie);
-    thisMovie.genres = result.genres;
-    return thisMovie;
+var _manyGistsWithGenres = function (results, callback) {
+  var gists = _.map(results, function (result) {
+    var thisGist = new Gist(result.gist);
+    thisGist.genres = result.genres;
+    return thisGist;
   });
 
-  callback(null, movies);
+  callback(null, gists);
 };
 
 // return a count
@@ -98,7 +98,7 @@ var _matchBy = function (keys, params, options, callback) {
   var query = [
     'MATCH (gist:Gist)',
     Cypher.where('gist', keys),
-    'RETURN gist  AS movie'
+    'RETURN gist  AS gist'
   ].join('\n');
 
   callback(null, query, cypher_params);
@@ -134,44 +134,44 @@ var _matchBy = function (keys, params, options, callback) {
 //   callback(null, query, cypher_params);
 // };
 
-var _getMoviesWithGenres = function (params, options, callback) {
+var _getGistsWithGenres = function (params, options, callback) {
   var cypher_params = {};
   var query = [
     'MATCH (gist:Gist)',
     'WITH gist',
     'OPTIONAL MATCH (domain)<-[:HAS_DOMAIN]-(gist)',
     'WITH gist, domain', 
-    'RETURN gist as movie, collect(domain.name) as genres',
+    'RETURN gist as gist, collect(domain.name) as genres',
     'ORDER BY gist.released DESC'
   ].join('\n');
 
   callback(null, query, cypher_params);
 };
 
-var _getMovieByTitle = function (params, options, callback) {
+var _getGistByTitle = function (params, options, callback) {
   var cypher_params = {
     title: params.title
   };
   console.log(cypher_params.title);
   var query = [
-    // 'MATCH (movie:Gist {title: {title} })<-[:ACTED_IN]-(actor)',
-    // 'WITH movie, actor, length((actor)-[:ACTED_IN]->()) as actormoviesweight',
-    // 'ORDER BY actormoviesweight DESC',
-    // 'WITH movie, collect({name: actor.name, poster_image: actor.poster_image, weight: actormoviesweight}) as actors', 
+    // 'MATCH (gist:Gist {title: {title} })<-[:ACTED_IN]-(actor)',
+    // 'WITH gist, actor, length((actor)-[:ACTED_IN]->()) as actorgistsweight',
+    // 'ORDER BY actorgistsweight DESC',
+    // 'WITH gist, collect({name: actor.name, poster_image: actor.poster_image, weight: actorgistsweight}) as actors', 
     'MATCH (gist:Gist {title: {title} })-[:HAS_DOMAIN]->(domain)',
     'WITH gist, collect(domain.name) as domains',
     'MATCH (usecase)<-[:HAS_USECASE]-(gist)',
     'WITH gist, domains, collect(usecase.name) as usecases',
-    'MATCH (author)-[:WRITER_OF]->(gist)',
-    'WITH gist, domains, usecases, collect(author.name) as authors',
+    'MATCH (writer)-[:WRITER_OF]->(gist)',
+    'WITH gist, domains, usecases, collect(writer.name) as writers',
     'MATCH (gist)-[:HAS_KEYWORD]->(keyword)<-[:HAS_KEYWORD]-(gists:Gist)',
-    'WITH DISTINCT gists as related, count(DISTINCT keyword.name) as keywords, gist, domains, usecases, authors',
+    'WITH DISTINCT gists as related, count(DISTINCT keyword.name) as keywords, gist, domains, usecases, writers',
     'ORDER BY keywords DESC',
-    'WITH collect(DISTINCT { related: { title: related.title, poster_image: related.poster_image }, weight: keywords }) as related, gist, domains, usecases, authors',
+    'WITH collect(DISTINCT { related: { title: related.title, poster_image: related.poster_image }, weight: keywords }) as related, gist, domains, usecases, writers',
     'MATCH (gist)-[:HAS_KEYWORD]->(keyword)',
-    'WITH keyword, related, gist, domains, usecases, authors',
+    'WITH keyword, related, gist, domains, usecases, writers',
     'LIMIT 10',
-    'RETURN related, collect(keyword.name) as keywords, gist as movie, domains as genres, usecases as directors, authors as writers'
+    'RETURN related, collect(keyword.name) as keywords, gist as gist, domains as genres, usecases, writers'
     //related, collect(keyword.name) as keywords (add to RETURN STATEMENT)
   ].join('\n');
 
@@ -186,7 +186,7 @@ var _matchByGenre = function (params, options, callback) {
   var query = [
     'MATCH (gist:Gist)-[:HAS_DOMAIN]->(domain)',
     'WHERE domain.name = {name}',
-    'RETURN gist as movie'
+    'RETURN gist as gist'
   ].join('\n');
 
   callback(null, query, cypher_params);
@@ -199,8 +199,8 @@ var _matchByGenre = function (params, options, callback) {
 
 //   var query = [
 //     'MATCH (actor:Person {name: {name} })',
-//     'MATCH (actor)-[:ACTED_IN]->(movie)', 
-//     'RETURN movie'
+//     'MATCH (actor)-[:ACTED_IN]->(gist)', 
+//     'RETURN gist'
 //   ].join('\n');
 
 //   callback(null, query, cypher_params);
@@ -208,12 +208,12 @@ var _matchByGenre = function (params, options, callback) {
 
 
 // var _matchByUUID = Cypher(_matchById, ['id']);
-var _matchByTitle = Cypher(_getMovieByTitle, _singleMovieWithGenres);
+var _matchByTitle = Cypher(_getGistByTitle, _singleGistWithGenres);
 
 var _matchAll = _.partial(_matchBy, []);
 
 
-// gets n random movies
+// gets n random gists
 var _getRandom = function (params, options, callback) {
   var cypher_params = {
     n: parseInt(params.n || 1)
@@ -221,7 +221,7 @@ var _getRandom = function (params, options, callback) {
 
   var query = [
     'MATCH (gist:Gist)',
-    'RETURN gist as movie, rand() as rnd',
+    'RETURN gist as gist, rand() as rnd',
     'ORDER BY rnd',
     'LIMIT {n}'
   ].join('\n');
@@ -250,13 +250,13 @@ var _updateName = function (params, options, callback) {
   var query = [
     'MATCH (gist:Gist {id:{id}})',
     'SET gist.name = {name}',
-    'RETURN gist as movie'
+    'RETURN gist as gist'
   ].join('\n');
 
   callback(null, query, cypher_params);
 };
 
-// creates the movie with cypher
+// creates the gist with cypher
 var _create = function (params, options, callback) {
   var cypher_params = {
     id: params.id || uuid(),
@@ -269,13 +269,13 @@ var _create = function (params, options, callback) {
     'SET gist.created = timestamp()',
     'ON MATCH',
     'SET gist.lastLogin = timestamp()',
-    'RETURN gist as movie'
+    'RETURN gist as gist'
   ].join('\n');
 
   callback(null, query, cypher_params);
 };
 
-// delete the movie and any relationships with cypher
+// delete the gist and any relationships with cypher
 var _delete = function (params, options, callback) {
   var cypher_params = {
     id: params.id
@@ -290,7 +290,7 @@ var _delete = function (params, options, callback) {
   callback(null, query, cypher_params);
 };
 
-// delete all movies
+// delete all gists
 var _deleteAll = function (params, options, callback) {
   var cypher_params = {};
 
@@ -306,30 +306,30 @@ var _deleteAll = function (params, options, callback) {
 // exposed functions
 
 
-// get a single movie by id
-// var getById = Cypher(_matchById, _singleMovie);
+// get a single gist by id
+// var getById = Cypher(_matchById, _singleGist);
 
 // Get by date range
-// var getByDateRange = Cypher(_getByDateRange, _manyMovies);
+// var getByDateRange = Cypher(_getByDateRange, _manyGists);
 
 // Get by date range
-//var getByActor = Cypher(_getByActor, _manyMovies);
+//var getByActor = Cypher(_getByActor, _manyGists);
 
-// get a single movie by name
-var getByTitle = Cypher(_getMovieByTitle, _singleMovieWithGenres);
+// get a single gist by name
+var getByTitle = Cypher(_getGistByTitle, _singleGistWithGenres);
 
-// get a movie by id and update their name
-var updateName = Cypher(_updateName, _singleMovie);
+// get a gist by id and update their name
+var updateName = Cypher(_updateName, _singleGist);
 
-// get a movie by genre
-var getByGenre = Cypher(_matchByGenre, _manyMovies);
+// get a gist by genre
+var getByGenre = Cypher(_matchByGenre, _manyGists);
 
-var getManyMoviesWithGenres = Cypher(_getMoviesWithGenres, _manyMoviesWithGenres);
+var getManyGistsWithGenres = Cypher(_getGistsWithGenres, _manyGistsWithGenres);
 
-// create a new movie
-var create = Cypher(_create, _singleMovie);
+// create a new gist
+var create = Cypher(_create, _singleGist);
 
-// create many new movies
+// create many new gists
 var createMany = function (params, options, callback) {
   if (params.names && _.isArray(params.names)) {
     async.map(params.names, function (name, callback) {
@@ -337,9 +337,9 @@ var createMany = function (params, options, callback) {
     }, function (err, responses) {
       Cypher.mergeReponses(err, responses, callback);
     });
-  } else if (params.movies && _.isArray(params.movies)) {
-    async.map(params.movies, function (movie, callback) {
-      create(_.pick(movie, 'name', 'id'), options, callback);
+  } else if (params.gists && _.isArray(params.gists)) {
+    async.map(params.gists, function (gist, callback) {
+      create(_.pick(gist, 'name', 'id'), options, callback);
     }, function (err, responses) {
       Cypher.mergeReponses(err, responses, callback);
     });
@@ -353,32 +353,32 @@ var createRandom = function (params, options, callback) {
   createMany({names: names}, options, callback);
 };
 
-// login a movie
+// login a gist
 var login = create;
 
-// get all movies
-var getAll = Cypher(_matchAll, _manyMovies);
+// get all gists
+var getAll = Cypher(_matchAll, _manyGists);
 
-// get all movies count
+// get all gists count
 var getAllCount = Cypher(_getAllCount, _singleCount);
 
-// delete a movie by id
-var deleteMovie = Cypher(_delete);
+// delete a gist by id
+var deleteGist = Cypher(_delete);
 
-// delete a movie by id
-var deleteAllMovies = Cypher(_deleteAll);
+// delete a gist by id
+var deleteAllGists = Cypher(_deleteAll);
 
-// reset all movies
-var resetMovies = function (params, options, callback) {
-  deleteAllMovies(null, options, function (err, response) {
+// reset all gists
+var resetGists = function (params, options, callback) {
+  deleteAllGists(null, options, function (err, response) {
     if (err) return callback(err, response);
     createRandom(params, options, function (err, secondResponse) {
       if (err) return Cypher.mergeRaws(err, [response, secondResponse], callback);
       manyFriendships({
-        movies: secondResponse.results,
+        gists: secondResponse.results,
         friendships: params.friendships
       }, options, function (err, finalResponse) {
-        // this doesn't return all the movies, just the ones with friends
+        // this doesn't return all the gists, just the ones with friends
         Cypher.mergeRaws(err, [response, secondResponse, finalResponse], callback);
       });
     });
@@ -388,7 +388,7 @@ var resetMovies = function (params, options, callback) {
 // export exposed functions
 
 module.exports = {
-  getAll: getManyMoviesWithGenres,
+  getAll: getManyGistsWithGenres,
   // getById: getById,
   getByTitle: getByTitle,
   // getByDateRange: getByDateRange,

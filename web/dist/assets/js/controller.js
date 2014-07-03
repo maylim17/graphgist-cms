@@ -41,20 +41,20 @@ contentApp.directive('carousel', function() {
 	var res = {
      restrict : 'A',
      link     : function (scope, element, attrs) {
-           scope.$watch(attrs.carousel, function(movies) {  
-           	if(scope.movies.length > 0)
+           scope.$watch(attrs.carousel, function(gists) {  
+           	if(scope.gists.length > 0)
            	{
-           		movies = scope.movies;
+           		gists = scope.gists;
            		var genre = element.attr('data-genre');
            		var html = '';
-	            for (var i = 0; i < movies.length; i++) {
-	            	if ($.inArray(genre, movies[i].genres) != -1) {
-	            	var movieTitleLink = movies[i].poster_image || '/assets/img/posters/' + movies[i].title.replace('/', ' ') + '.jpg';
+	            for (var i = 0; i < gists.length; i++) {
+	            	if ($.inArray(genre, gists[i].genres) != -1) {
+	            	var gistTitleLink = gists[i].poster_image || '/assets/img/posters/' + gists[i].title.replace('/', ' ') + '.jpg';
 	                 html += '<div class="item">' +
-						          '<div class="thumbnail carousel-movies">' +
-						            '<a href="index.html#/movies/' + movies[i].title.replace('/', '%252F') + '"><img alt="100%x180" src="' + movieTitleLink + '"></a>' +
+						          '<div class="thumbnail carousel-gists">' +
+						            '<a href="index.html#/gists/' + gists[i].title.replace('/', '%252F') + '"><img alt="100%x180" src="' + gistTitleLink + '"></a>' +
 						          '</div>' +
-						          '<span><a href="index.html#/movies/' + movies[i].title.replace('/', '%252F') + '">' + movies[i].title + '</a></span>' +
+						          '<span><a href="index.html#/gists/' + gists[i].title.replace('/', '%252F') + '">' + gists[i].title + '</a></span>' +
 						        '</div>';
 						    };
 	            }
@@ -85,16 +85,16 @@ contentApp.directive('carousel', function() {
   return res;
 });
 
-contentApp.controller('MovieListCtrl', ['$scope', '$http', '$templateCache', 
+contentApp.controller('GistListCtrl', ['$scope', '$http', '$templateCache', 
 	function($scope, $http, $templateCache) {
-	  	$scope.url = 'http://localhost:3000/api/v0/movies?api_key=special-key&neo4j=false';
-	  	$scope.movies = [];
+	  	$scope.url = 'http://localhost:3000/api/v0/gists?api_key=special-key&neo4j=false';
+	  	$scope.gists = [];
 
-	  	var fetchMovies = function()
+	  	var fetchGists = function()
 	  	{
 	  		$http({method: 'GET', url: $scope.url, cache: $templateCache}).
 			    success(function(data, status, headers, config) {
-			    	$scope.movies = data;
+			    	$scope.gists = data;
 			    }).
 			    error(function(data, status, headers, config) {
 			    // called asynchronously if an error occurs
@@ -102,7 +102,7 @@ contentApp.controller('MovieListCtrl', ['$scope', '$http', '$templateCache',
 			    });
 	  	}
 
-	  	fetchMovies();
+	  	fetchGists();
 	}]);
 
 
@@ -110,18 +110,18 @@ contentApp.controller('MovieListCtrl', ['$scope', '$http', '$templateCache',
 // 	var res = {
 //      restrict : 'A',
 //      link     : function (scope, element, attrs) {
-//            scope.$watch(attrs.carouselactors, function(movie) {  
-//            	if(scope.movie != undefined ? scope.movie.actors != undefined ? scope.movie.actors.length > 0 : false : false)
+//            scope.$watch(attrs.carouselactors, function(gist) {  
+//            	if(scope.gist != undefined ? scope.gist.actors != undefined ? scope.gist.actors.length > 0 : false : false)
 //            	{
-//            		movie = scope.movie;
+//            		gist = scope.gist;
 //            		var html = '';
-// 	            for (var i = 0; i < movie.actors.length; i++) {
-// 					var actorTitleLink = movie.actors[i].poster_image || '/assets/img/actors/' + movie.actors[i].name.replace('/', ' ') + '.jpg';
+// 	            for (var i = 0; i < gist.actors.length; i++) {
+// 					var actorTitleLink = gist.actors[i].poster_image || '/assets/img/actors/' + gist.actors[i].name.replace('/', ' ') + '.jpg';
 // 	                 html += '<div class="item">' +
 // 						          '<div class="thumbnail">' +
-// 						            '<a href="index.html#/people/' + movie.actors[i].name + '"><img src="' + actorTitleLink + '"/></a>' +
+// 						            '<a href="index.html#/people/' + gist.actors[i].name + '"><img src="' + actorTitleLink + '"/></a>' +
 // 						          '</div>' +
-// 						          '<span><a href="index.html#/people/' + movie.actors[i].name + '">' + movie.actors[i].name + '</a></span>' +
+// 						          '<span><a href="index.html#/people/' + gist.actors[i].name + '">' + gist.actors[i].name + '</a></span>' +
 // 						        '</div>';
 
 // 	            }
@@ -146,22 +146,22 @@ contentApp.controller('MovieListCtrl', ['$scope', '$http', '$templateCache',
 //   return res;
 // });
 
-contentApp.directive('carouselrelatedmovies', function() {
+contentApp.directive('carouselrelatedgists', function() {
 	var res = {
      restrict : 'A',
      link     : function (scope, element, attrs) {
-           scope.$watch(attrs.carouselrelatedmovies, function(movie) {  
-           	if(scope.movie != undefined ? scope.movie.related != undefined ? scope.movie.related.length > 0 : false : false)
+           scope.$watch(attrs.carouselrelatedgists, function(gist) {  
+           	if(scope.gist != undefined ? scope.gist.related != undefined ? scope.gist.related.length > 0 : false : false)
            	{
-           		movie = scope.movie;
+           		gist = scope.gist;
            		var html = '';
-	            for (var i = 0; i < movie.related.length; i++) {
-					var relatedMovieTitleLink = movie.related[i].related.poster_image || '/assets/img/posters/' + movie.related[i].related.title.replace('/', ' ') + '.jpg';
+	            for (var i = 0; i < gist.related.length; i++) {
+					var relatedGistTitleLink = gist.related[i].related.poster_image || '/assets/img/posters/' + gist.related[i].related.title.replace('/', ' ') + '.jpg';
 	                 html += '<div class="item">' +
 						          '<div class="thumbnail">' +
-						            '<a href="index.html#/movies/' + movie.related[i].related.title.replace('/', '%252F')  + '"><img src="' + relatedMovieTitleLink + '"/></a>' +
+						            '<a href="index.html#/gists/' + gist.related[i].related.title.replace('/', '%252F')  + '"><img src="' + relatedGistTitleLink + '"/></a>' +
 						          '</div>' +
-						          '<span><a href="index.html#/movies/' + movie.related[i].related.title.replace('/', '%252F')  + '">' + movie.related[i].related.title + '</a></span>' +
+						          '<span><a href="index.html#/gists/' + gist.related[i].related.title.replace('/', '%252F')  + '">' + gist.related[i].related.title + '</a></span>' +
 						        '</div>';
 
 	            }
@@ -188,17 +188,17 @@ contentApp.directive('carouselrelatedmovies', function() {
 
 
 
-contentApp.controller('MovieItemCtrl', ['$scope', '$routeParams', '$http', '$templateCache',
+contentApp.controller('GistItemCtrl', ['$scope', '$routeParams', '$http', '$templateCache',
   function($scope, $routeParams, $http, $templateCache) {
-  		console.log('http://localhost:3000/api/v0/movies/title/' + encodeURIComponent(decodeURI(decodeURI($routeParams.movieId))) + '?api_key=special-key&neo4j=false');
-  		$scope.url = 'http://localhost:3000/api/v0/movies/title/' + encodeURIComponent(decodeURI(decodeURI($routeParams.movieId))) + '?api_key=special-key&neo4j=false';
-	  	var fetchMovie = function()
+  		console.log('http://localhost:3000/api/v0/gists/title/' + encodeURIComponent(decodeURI(decodeURI($routeParams.gistId))) + '?api_key=special-key&neo4j=false');
+  		$scope.url = 'http://localhost:3000/api/v0/gists/title/' + encodeURIComponent(decodeURI(decodeURI($routeParams.gistId))) + '?api_key=special-key&neo4j=false';
+	  	var fetchGist = function()
 	  	{
 	  		$http({method: 'GET', url: $scope.url, cache: $templateCache}).
 			    success(function(data, status, headers, config) {
-			    	$scope.movie = data;
-			    	$scope.movie.poster_image = $scope.movie.poster_image || '/assets/img/posters/' + $scope.movie.title.replace('/', ' ') + '.jpg';
-			    	$scope.movie.poster_image = $scope.movie.poster_image.replace("w185", "w300");
+			    	$scope.gist = data;
+			    	$scope.gist.poster_image = $scope.gist.poster_image || '/assets/img/posters/' + $scope.gist.title.replace('/', ' ') + '.jpg';
+			    	$scope.gist.poster_image = $scope.gist.poster_image.replace("w185", "w300");
 			    }).
 			    error(function(data, status, headers, config) {
 			    // called asynchronously if an error occurs
@@ -206,26 +206,26 @@ contentApp.controller('MovieItemCtrl', ['$scope', '$routeParams', '$http', '$tem
 			    });
 	  	}
 
-	  	fetchMovie();
+	  	fetchGist();
   }]);
 
-contentApp.directive('carouselpeoplemovies', function() {
+contentApp.directive('carouselpeoplegists', function() {
 	var res = {
      restrict : 'A',
      link     : function (scope, element, attrs) {
-           scope.$watch(attrs.carouselpeoplemovies, function(people) {  
+           scope.$watch(attrs.carouselpeoplegists, function(people) {  
            	console.log(scope.people);
-           	if(scope.people != undefined ? scope.people.movies != undefined ? scope.people.movies.length > 0 : false : false)
+           	if(scope.people != undefined ? scope.people.gists != undefined ? scope.people.gists.length > 0 : false : false)
            	{
            		people = scope.people;
            		var html = '';
-	            for (var i = 0; i < people.movies.length; i++) {
-	            	var relatedMovieTitleLink = people.movies[i].poster_image || '/assets/img/posters/' + people.movies[i].title.replace('/', ' ') + '.jpg';
+	            for (var i = 0; i < people.gists.length; i++) {
+	            	var relatedGistTitleLink = people.gists[i].poster_image || '/assets/img/posters/' + people.gists[i].title.replace('/', ' ') + '.jpg';
 	                 html += '<div class="item">' +
 						          '<div class="thumbnail">' +
-						            '<a href="index.html#/movies/' + people.movies[i].title.replace('/', '%252F')  + '"><img src="' + relatedMovieTitleLink +'"/></a>' +
+						            '<a href="index.html#/gists/' + people.gists[i].title.replace('/', '%252F')  + '"><img src="' + relatedGistTitleLink +'"/></a>' +
 						          '</div>' +
-						          '<span><a href="index.html#/movies/' + people.movies[i].title.replace('/', '%252F')  + '">' + people.movies[i].title + '</a></span>' +
+						          '<span><a href="index.html#/gists/' + people.gists[i].title.replace('/', '%252F')  + '">' + people.gists[i].title + '</a></span>' +
 						        '</div>';
 
 	            }

@@ -35,7 +35,7 @@ function _randomNames (n) {
 var _singlePerson = function (results, callback) {
   if (results.length) {
     var person = new Person(results[0].person);
-    person.movies = results[0].movie;
+    person.gists = results[0].gist;
     person.related = results[0].related;
     callback(null, person);
   } else {
@@ -95,14 +95,14 @@ var _matchBy = function (keys, params, options, callback) {
 
 
 
-var _getDirectorByMovie = function (params, options, callback) {
+var _getDirectorByGist = function (params, options, callback) {
   var cypher_params = {
     title: params.title
   };
 
   var query = [
-    'MATCH (movie:Gist {title: {title}})',
-    'MATCH (person)<-[:HAS_USECASE]-(movie)', 
+    'MATCH (gist:Gist {title: {title}})',
+    'MATCH (person)<-[:HAS_USECASE]-(gist)', 
     'RETURN DISTINCT person'
   ].join('\n');
 
@@ -126,15 +126,15 @@ var _getDirectorByMovie = function (params, options, callback) {
 //   callback(null, query, cypher_params);
 // };
 
-// var _getRolesByMovie = function (params, options, callback) {
+// var _getRolesByGist = function (params, options, callback) {
 //   var cypher_params = {
 //     title: params.title
 //   };
 
 //   var query = [
-//     'MATCH (movie:Gist {title: {title}})',
-//     'MATCH (people:Person)-[relatedTo]-(movie)', 
-//     'RETURN { movietitle: movie.title, name: people.name, roletype: type(relatedTo) } as role'
+//     'MATCH (gist:Gist {title: {title}})',
+//     'MATCH (people:Person)-[relatedTo]-(gist)', 
+//     'RETURN { gisttitle: gist.title, name: people.name, roletype: type(relatedTo) } as role'
 //   ].join('\n');
 
 //   callback(null, query, cypher_params);
@@ -149,11 +149,11 @@ var _getViewByName = function (params, options, callback) {
     // 'MATCH (node)', 
     // 'WHERE node:Domain OR node:UseCase AND node.name= {name}',
     // 'WITH node',
-    'MATCH (node:Category {name: {name}})-[relatedTo]-(gists:Gist)',  
-    'OPTIONAL MATCH (node)<-[:HAS_USECASE|HAS_DOMAIN]-(gist)-[:HAS_USECASE|HAS_DOMAIN]->(nodes)',
-    'WITH DISTINCT { name: nodes.name, poster_image: nodes.poster_image } as related, count(DISTINCT gists) as weight, gist, node',
+    'MATCH (tag:Tag {name: {name}})-[relatedTo]-(gists:Gist)',  
+    'OPTIONAL MATCH (tag)<-[:HAS_USECASE|HAS_DOMAIN]-(gist)-[:HAS_USECASE|HAS_DOMAIN]->(tags)',
+    'WITH DISTINCT { name: tags.name, poster_image: tags.poster_image } as related, count(DISTINCT gists) as weight, gist, tag',
     'ORDER BY weight DESC',
-    'RETURN collect(DISTINCT { title: gist.title, poster_image: gist.poster_image }) as movie, collect(DISTINCT { related: related, weight: weight }) as related, node as person'
+    'RETURN collect(DISTINCT { title: gist.title, poster_image: gist.poster_image }) as gist, collect(DISTINCT { related: related, weight: weight }) as related, tag as person'
   ].join('\n');
 
   callback(null, query, cypher_params);
@@ -272,13 +272,13 @@ var _deleteAll = function (params, options, callback) {
 // get a single person by name
 var getByName = Cypher(_getViewByName, _singlePerson);
 
-// Get a director of a movie
-// var getDirectorByMovie = Cypher(_getDirectorByMovie, _singlePerson);
+// Get a director of a gist
+// var getDirectorByGist = Cypher(_getDirectorByGist, _singlePerson);
 
-// get movie roles
-// var getRolesByMovie = Cypher(_getRolesByMovie, _manyRoles);
+// get gist roles
+// var getRolesByGist = Cypher(_getRolesByGist, _manyRoles);
 
-// Get a director of a movie
+// Get a director of a gist
 // var getCoActorsByPerson = Cypher(_getCoActorsByPerson, _manyPersons);
 
 // get n random people
@@ -355,7 +355,7 @@ module.exports = {
   getAll: getAll,
   // getById: getById,
   getByName: getByName,
-  // getDirectorByMovie: getDirectorByMovie,
+  // getDirectorByGist: getDirectorByGist,
   // getCoActorsByPerson: getCoActorsByPerson,
-  // getRolesByMovie: getRolesByMovie
+  // getRolesByGist: getRolesByGist
 };

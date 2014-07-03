@@ -5976,7 +5976,7 @@ td.visible-print {
 }
 
 /* ================ */
-/* Neo4j Movie Demo */
+/* Neo4j Gist Demo */
 /* ================ */
 
 .show-grid [class^="col-"] {
@@ -6430,7 +6430,7 @@ body
   font-family:'Open Sans', Arial !important;
 }
 
-/* Category carousel */
+/* Tag carousel */
 #owl-demo-1 .item, #owl-demo-2 .item, #owl-demo-3 .item
 {
 /*  padding: 30px 0px;*/
@@ -6545,7 +6545,7 @@ body
   font-size: 11px;
 }
 
-.carousel-movies
+.carousel-gists
 {
   max-height: 190px;
   overflow: hidden

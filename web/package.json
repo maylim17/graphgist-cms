@@ -1,7 +1,7 @@
 {
-  "name": "neo4j-app-movies-ui",
+  "name": "neo4j-app-gists-ui",
   "version": "0.0.0",
-  "description": "Neo4j movies",
+  "description": "Neo4j gists",
   "main": "app.js",
   "dependencies": {
     "express": "~3.4.7"

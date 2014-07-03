@@ -9,7 +9,7 @@ var express     = require('express')
   , PORT        = process.env.PORT || 3000
   , API_STRING  = '/api/v0'
   , BASE_URL    = process.env.BASE_URL || process.env.BASE_CALLBACK_URL || "http://localhost:"+PORT
-  //'http://movieapi-neo4j.herokuapp.com' 
+  //'http://gistapi-neo4j.herokuapp.com' 
   , app         = express()
   , subpath     = express();
 
@@ -68,16 +68,16 @@ var models = require("./models/swagger_models");
 // Add models and methods to swagger
 swagger.addModels(models)
 .addGet(routes.people.list)
-.addGet(routes.movies.list)
-.addGet(routes.movies.movieCount)
-.addGet(routes.movies.findById)
-.addGet(routes.movies.findByTitle)
-.addGet(routes.movies.findMoviesByDateRange)
-.addGet(routes.movies.findMoviesByActor)
-.addGet(routes.movies.findByGenre)
-.addGet(routes.people.findPersonByDirectedMovie)
+.addGet(routes.gists.list)
+.addGet(routes.gists.gistCount)
+.addGet(routes.gists.findById)
+.addGet(routes.gists.findByTitle)
+.addGet(routes.gists.findGistsByDateRange)
+.addGet(routes.gists.findGistsByActor)
+.addGet(routes.gists.findByGenre)
+.addGet(routes.people.findPersonByDirectedGist)
 .addGet(routes.people.findActorsByCoActor)
-.addGet(routes.people.findRolesByMovie)
+.addGet(routes.people.findRolesByGist)
 .addGet(routes.people.findByName);
 
 

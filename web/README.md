@@ -1,8 +1,8 @@
 ========================
-Neo4j Movie Website Demo
+Neo4j Gist Website Demo
 ========================
 
-This repository is a movie content browser powered by Neo4j. All movie content is consumed from a Neo4j REST API endpoint built using Neo4j Swagger.
+This repository is a gist content browser powered by Neo4j. All gist content is consumed from a Neo4j REST API endpoint built using Neo4j Swagger.
 
 Tools:
 

@@ -8,7 +8,7 @@
     <meta name="author" content="">
     <link rel="shortcut icon" href="assets/ico/favicon.png">
 
-    <title>Neo4j Movies</title>
+    <title>Neo4j Gists</title>
 
     <link type="text/css" rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:400italic,400,300,600,700">
 
@@ -37,7 +37,7 @@
     <script src="assets/js/controller.js"></script>
   </head>
 
-  <body ng-controller="MovieItemCtrl">
+  <body ng-controller="GistItemCtrl">
 
     <!-- Static navbar -->
     <div class="navbar navbar-default navbar-static-top" role="navigation">
@@ -53,7 +53,7 @@
             <img id="logo" alt="Neo4j World's Leading Graph Database" src="assets/img/logo-white.svg">
           </div>
           <a class="navbar-brand" href="index.html">
-            <div class="brand">Neo4j Movies</div>
+            <div class="brand">Neo4j Gists</div>
           </a>
         </div>
         <div class="navbar-collapse collapse">
@@ -65,13 +65,13 @@
         </div><!--/.nav-collapse -->
       </div>
     </div>
-    <div class="container" ng-model="movie">
+    <div class="container" ng-model="gist">
       <div class="row">
         <div>
           <ol class="breadcrumb">
             <li><a href="#">Home</a></li>
-            <li><a href="#">Movies</a></li>
-            <li class="active">{{movie.title}}</li>
+            <li><a href="#">Gists</a></li>
+            <li class="active">{{gist.title}}</li>
           </ol>
         </div>
       </div>
@@ -79,7 +79,7 @@
         <div class="col-md-8 col-md-push-4 col-sm-8 col-sm-push-4">
           <div class="row">
             <div class="col-md-12">
-              <h3>{{movie.title}} {{'(' + movie.released + ')'}}</h3>
+              <h3>{{gist.title}} {{'(' + gist.released + ')'}}</h3>
             </div>
           </div>
           <div class="row">
@@ -90,20 +90,20 @@
               </ul>
               <div class="panel panel-default">
                 <!-- Default panel contents -->
-                <div class="panel-heading">Movie Details</div>
+                <div class="panel-heading">Gist Details</div>
                 <div class="panel-body">
                   <p>
-                    {{movie.summary}}
+                    {{gist.summary}}
                   </p>
                 </div>
 
                 <!-- List group -->
                 <ul class="list-group list-group-details">
                   <li class="list-group-item">
-                    <div class="panel-heading">Rated: <span class="panel-heading">{{movie.rated}}</span></div>
+                    <div class="panel-heading">Rated: <span class="panel-heading">{{gist.rated}}</span></div>
                   </li>
                   <li class="list-group-item">
-                    <div class="panel-heading">Duration: <span class="panel-heading">{{movie.duration + ' min'}}</span></div>
+                    <div class="panel-heading">Duration: <span class="panel-heading">{{gist.duration + ' min'}}</span></div>
                   </li>
                   <li class="list-group-item">
                     <div class="panel-heading">Genres: <span class="panel-heading"><a href="#">Drama</a>, <a href="#">Adventure</a></span></div>
@@ -177,7 +177,7 @@
           <div class="row">
             <div class="col-md-12 col-sm-12 col-xs-12">
               <div class="thumbnail">
-                <img ng-src="assets/img/{{movie.title}}.jpg" alt="{{movie.title}}">
+                <img ng-src="assets/img/{{gist.title}}.jpg" alt="{{gist.title}}">
               </div>
             </div>
           </div>
@@ -189,7 +189,7 @@
                 <!-- List group -->
                   <div class="row">
                     <div class="item-label col-md-3">Tagline:</div>
-                    <div class="col-md-9">{{movie.tagline}}</div>
+                    <div class="col-md-9">{{gist.tagline}}</div>
                   </div>
                  <div class="row">
                     <div class="item-label col-md-3">Keywords:</div>
